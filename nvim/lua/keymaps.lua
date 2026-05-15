@@ -30,7 +30,7 @@ setnl({
     Opts = { desc = "Buffers" },
   },
   {
-    key = "<leader>bx",
+    key = "<leader>bd",
     cmd = "<cmd>bdelete<cr>",
     Opts = { desc = "Close buffer" },
   },
@@ -136,7 +136,7 @@ setnl({
   },
   {
     key = "<leader>wj",
-    cmd = "<cmd>windcmd j<cr>",
+    cmd = "<cmd>wincmd j<cr>",
     Opts = { desc = "Window down" },
   },
   {
@@ -151,6 +151,7 @@ setnl({
   },
 })
 
+set("n", "<A-r>", "r")
 vim.api.nvim_set_keymap("t", "<Esc>", "<C-\\><C-n>", {})
 
 -- local builtin = require('telescope.builtin')

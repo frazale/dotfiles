@@ -23,18 +23,16 @@
 ;;
 ;;(setq doom-font (font-spec :family "Fira Code" :size 12 :weight 'semi-light)
 ;;      doom-variable-pitch-font (font-spec :family "Fira Sans" :size 13))
-(setq doom-font (font-spec :family "JetBrainsMono Nerd Font" :size 14 :weight 'regular))
-
+;;
 ;; If you or Emacs can't find your font, use 'M-x describe-font' to look them
 ;; up, `M-x eval-region' to execute elisp code, and 'M-x doom/reload-font' to
-;; refresh
-;; your font settings. If Emacs still can't find your font, it likely
+;; refresh your font settings. If Emacs still can't find your font, it likely
 ;; wasn't installed correctly. Font issues are rarely Doom issues!
 
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
-(setq doom-theme 'doom-material-dark)
+(setq doom-theme 'doom-bluloco-dark)
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
@@ -43,7 +41,7 @@
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
 (setq org-directory "~/org/")
-
+(setq inferior-lisp-program "/usr/bin/sbcl")
 
 ;; Whenever you reconfigure a package, make sure to wrap your config in an
 ;; `with-eval-after-load' block, otherwise Doom's defaults may override your
@@ -75,22 +73,69 @@
 ;;
 ;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
 ;; they are implemented.
+
 (with-eval-after-load 'which-key
-  (setq which-key-idle-delay 0.05
-        which-key-idle-secondary-delay 0.05))
+  (setq which-key-idle-delay 0.1))
+
+
+;; custom keybinds
+(map!
+ :desc "end of line" :nv "C-S-l" #'evil-end-of-visual-line
+ :desc "start of line" :nv "C-S-h" #'evil-first-non-blank-of-visual-line
+ :desc "paragraph up" :nv "C-S-k" #'backward-paragraph
+ :desc "paragraph down" :nv "C-S-j" #'forward-paragraph
+ :desc "previous buffer" :nv "H" #'previous-buffer
+ :desc "next buffer" :nv "L" #'next-buffer
+ :desc "window left" :nv "M-h" #'evil-window-left
+ :desc "window down" :nv "M-j" #'evil-window-down
+ :desc "window up" :nv "M-k" #'evil-window-up
+ :desc "window right" :nv "M-l" #'evil-window-right)
 
 (with-eval-after-load 'corfu
-  (setq corfu-auto t
-        corfu-auto-delay 0.05))
+  (use-package fzf-native
+    :init
+    (setq fzf-native-always-compile-module t)
+    :config
+    (fzf-native-load-own-build-dyn))
 
-(map! :map 'override
-      :nv "H" 'beginning-of-line
-      :nv "L" 'end-of-line
-      :nv "J" 'forward-paragraph
-      :nv "K" 'backward-paragraph
-      :nv "C-SPC" '+lookup/dockumentation)
+  (use-package fussy
+    :after (fzf-native)
+    :config
+    (setq fussy-compare-same-score-fn 'fussy-histlen->strlen<)
+    (fussy-setup-fzf)
+    (fussy-eglot-setup))
 
-(map! :map lisp-mode-map
-      :nv "M-e" 'sly-eval-last-expression
-      :nv "M-E" 'sly-eval-print-last-expression
-      :nv "M-d" 'sly-eval-defun)
+  (use-package slime
+    :init
+    (require 'slime-company)
+    (remove-hook 'lisp-mode-hook #'sly-editing-mode)
+
+    :config
+    (slime-setup '(slime-fancy
+                   slime-mrepl
+                   slime-asdf
+                   slime-highlight-edits
+                   slime-quicklisp
+                   slime-coalton)))
+
+  (advice-add 'corfu--capf-wrapper :before 'fussy-wipe-cache)
+  (setq corfu-auto-delay 0.1)
+  (setq corfu-auto-prefix 1)
+  (add-hook 'corfu-mode-hook
+            (lambda ()
+              (setq-local fussy-max-candidate-limit 5000
+                          fussy-default-regex-fn 'fussy-pattern-first-letter
+                          fussy-prefer-prefix nil))))
+
+(map! :mode 'lisp-mode
+      :desc "describe symbol" :nv "K" #'slime-describe-symbol
+      :localleader
+      :desc "expand macro" :nv "m" #'slime-eval-macroexpand-inplace
+      (:prefix ("s" . "slime")
+       :desc "slime" :nv "s" #'slime
+       :desc "slime-connect" :nv "C-s" #'slime-connect
+       :desc "slime-cd" :nv "c" #'slime-cd)
+      (:prefix ("e" . "eval")
+       :desc "eval buffer" :nvi "b" #'slime-eval-buffer
+       :desc "eval expr" :nvi "e" #'slime-eval-last-expression
+       :desc "eval defun" :nvi "d" #'slime-eval-defun))

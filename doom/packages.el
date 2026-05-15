@@ -25,10 +25,18 @@
 ;; (package! this-package
 ;;   :recipe (:host github :repo "username/repo"
 ;;            :files ("some-file.el" "src/lisp/*.el")))
+(package! fzf-native
+  :recipe (:host github
+           :repo "dangduc/fzf-native"
+           :files (:defaults "*.c" "*.h" "*.txt")))
 
 ;; If you'd like to disable a package included with Doom, you can do so here
 ;; with the `:disable' property:
 ;; (package! builtin-package :disable t)
+
+(package! sly :disable t)
+(package! sly-macrostep :disable t)
+(package! sly-repl-ansi-color :disable t)
 
 ;; You can override the recipe of a built in package without having to specify
 ;; all the properties for `:recipe'. These will inherit the rest of its recipe
@@ -53,4 +61,6 @@
 ;; ...Or *all* packages (NOT RECOMMENDED; will likely break things)
 ;; (unpin! t)
 
-(package! sly :disable t)
+(package! slime)
+(package! fussy)
+(package! slime-company)

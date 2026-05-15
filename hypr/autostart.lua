@@ -1,0 +1,7 @@
+hl.on("hyprland.start", function()
+  hl.exec_cmd("ironbar")
+  hl.exec_cmd("hyprpaper")
+  hl.exec_cmd("hyprlauncher -d")
+  hl.exec_cmd("systemctl --user start hyprpolkitagent")
+  hl.exec_cmd("dunst")
+end)
