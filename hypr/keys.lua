@@ -39,8 +39,8 @@ local binds = {
   { mainModS("l"),        hl.dsp.window.move({ direction = "right" }) },
   { mainModS("j"),        hl.dsp.window.move({ direction = "down" }) },
   --
-  { mainMod("s"),         hl.dsp.workspace.toggle_special("magic") },
-  { mainModS("s"),        hl.dsp.window.move({ workspace = "special:magic" }) },
+  { mainMod("m"),         hl.dsp.workspace.toggle_special("magic") },
+  { mainModS("m"),        hl.dsp.window.move({ workspace = "special:magic" }) },
   { mainMod("mouse:272"), hl.dsp.window.drag(),                               { mouse = true } },
   { mainMod("mouse:273"), hl.dsp.window.resize(),                             { mouse = true } },
 }

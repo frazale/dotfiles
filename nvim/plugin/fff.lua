@@ -24,3 +24,7 @@ vim.g.fff = {
 vim.keymap.set("n", "ff", function()
   require("fff").find_files()
 end, { desc = "FFFind files" })
+
+vim.keymap.set("n", "fg", function()
+  require("fff").live_grep()
+end, { desc = "FFFind live grep" })

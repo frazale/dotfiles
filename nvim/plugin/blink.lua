@@ -15,9 +15,14 @@ vim.pack.add({
   { src = "https://github.com/saghen/blink.pairs",          version = vim.version.range("*") },
   { src = "https://github.com/saghen/blink.compat",         version = vim.version.range("*") },
   { src = "https://github.com/saghen/blink.cmp",            version = vim.version.range("*") },
+  -- setup conjure bs
+  { src = "https://github.com/Olical/conjure" },
+  { src = "https://github.com/PaterJason/cmp-conjure" },
 })
 
 require("lazydev").setup()
+require("blink.compat").setup({})
+-- blink
 local blink = require("blink.cmp")
 blink.setup({
   -- 'default' (recommended) for mappings similar to built-in completions (C-y to accept)
@@ -85,6 +90,10 @@ blink.setup({
         inherit_defaults = true,
         "lazydev",
       },
+      lisp = {
+        inherit_defaults = true,
+        "conjure"
+      }
     },
 
     providers = {
@@ -93,6 +102,10 @@ blink.setup({
         module = "lazydev.integrations.blink",
         score_offset = 100,
       },
+      conjure = {
+        name = "conjure",
+        module = "blink.compat.source"
+      }
     },
   },
 
