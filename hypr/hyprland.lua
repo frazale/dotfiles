@@ -6,27 +6,10 @@ require("keys")
 require("windows")
 
 hl.config({
-  misc = {
-    force_default_wallpaper = 0,    -- Set to 0 or 1 to disable the anime mascot wallpapers
-    disable_hyprland_logo   = true, -- If true disables the random hyprland logo / anime girl background. :(
-  },
-  general = {
-    gaps_in = 1,
-    gaps_out = 0,
-  },
-
-  decoration = {
-    rounding = 0,
-    rounding_power = 0,
-
-    shadow = {
-      enabled = false,
+    misc = {
+        force_default_wallpaper = 0,    -- Set to 0 or 1 to disable the anime mascot wallpapers
+        disable_hyprland_logo   = true, -- If true disables the random hyprland logo / anime girl background. :(
     },
-
-    blur = {
-      enabled = false
-    },
-  }
 })
 -----------------------
 ----- PERMISSIONS -----
