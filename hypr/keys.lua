@@ -17,9 +17,11 @@ local binds = {
   { mainMod("Return"),    hl.dsp.exec_cmd(p.terminal) },
   { mainMod("E"),         hl.dsp.exec_cmd(p.fileManager) },
   { mainMod("Space"),     hl.dsp.exec_cmd(p.menu) },
-  { mainModS("F"),        hl.dsp.window.float() },
+  -- { mainModS("F"),        hl.dsp.window.float() },
+  { mainModS("F"),        hl.dsp.window.fullscreen() },
   { mainModS("P"),        hl.dsp.window.pseudo() },
   { mainModS("J"),        hl.dsp.layout("togglesplit") },
+  { mainModS("Space"),    hl.dsp.exec_cmd(p.settings) },
   -- focus
   { mainMod("left"),      hl.dsp.focus({ direction = "left" }) },
   { mainMod("up"),        hl.dsp.focus({ direction = "up" }) },

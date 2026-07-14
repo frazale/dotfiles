@@ -30,9 +30,14 @@ setnl({
     Opts = { desc = "Buffers" },
   },
   {
-    key = "<leader>bd",
+    key = "<leader>bq",
     cmd = "<cmd>bdelete<cr>",
     Opts = { desc = "Close buffer" },
+  },
+  {
+    key = "cs",
+    cmd = "<cmd>startreplace<cr>",
+    Opts = { desc = "Replace character" },
   },
   {
     key = "<C-k>",

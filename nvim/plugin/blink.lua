@@ -15,12 +15,12 @@ vim.pack.add({
   { src = "https://github.com/saghen/blink.pairs",          version = vim.version.range("*") },
   { src = "https://github.com/saghen/blink.compat",         version = vim.version.range("*") },
   { src = "https://github.com/saghen/blink.cmp",            version = vim.version.range("*") },
-  -- setup conjure bs
-  { src = "https://github.com/Olical/conjure" },
-  { src = "https://github.com/PaterJason/cmp-conjure" },
+  {
+    src = "https://github.com/nickjvandyke/opencode.nvim",
+    version = vim.version.range("*"),
+  },
 })
 
-require("lazydev").setup()
 require("blink.compat").setup({})
 -- blink
 local blink = require("blink.cmp")
@@ -71,10 +71,10 @@ blink.setup({
   completion = {
     documentation = { auto_show = true },
     accept = { auto_brackets = { enabled = true } },
-    ghost_text = { enabled = true },
+    ghost_text = { enabled = false },
     list = {
       selection = {
-        auto_insert = false,
+        auto_insert = true,
         preselect = false,
       },
     },
@@ -83,18 +83,7 @@ blink.setup({
   -- Default list of enabled providers defined so that you can extend it
   -- elsewhere in your config, without redefining it, due to `opts_extend`
   sources = {
-    default = { "lsp", "path", "snippets", "buffer" },
-
-    per_filetype = {
-      lua = {
-        inherit_defaults = true,
-        "lazydev",
-      },
-      lisp = {
-        inherit_defaults = true,
-        "conjure"
-      }
-    },
+    default = { "lazydev", "lsp", "buffer", "path", "snippets" },
 
     providers = {
       lazydev = {
@@ -102,10 +91,6 @@ blink.setup({
         module = "lazydev.integrations.blink",
         score_offset = 100,
       },
-      conjure = {
-        name = "conjure",
-        module = "blink.compat.source"
-      }
     },
   },
 
@@ -117,5 +102,7 @@ blink.setup({
   fuzzy = { implementation = "prefer_rust_with_warning" },
 })
 
+require("lazydev").setup()
 local pairs = require("blink.pairs")
+pairs.download():wait(60000)
 pairs.setup({})

@@ -11,21 +11,21 @@
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
 
+(setq load-prefer-newer t)
+
 ;; Disable warning popups
 (setq warning-minimum-level :error)
 (setq native-comp-async-report-warnings-errors 'silent)
 
 ;; Set the font. Note: height = px * 100
-(set-face-attribute 'default nil :font "JetBrainsMono Nerd Font" :height 110)
+(set-face-attribute 'default nil :font "JetBrainsMono Nerd Font"
+                    :height 110)
 
 ;; Add unique buffer names in the minibuffer where there are many
 ;; identical files. This is super useful if you rely on folders for
 ;; organization and have lots of files with the same name,
 ;; e.g. foo/index.ts and bar/index.ts.
 (require 'uniquify)
-
-;; Automatically insert closing parens
-(electric-pair-mode t)
 
 ;; Visualize matching parens
 (show-paren-mode 1)
@@ -48,6 +48,7 @@
 ;; Display line numbers only when in programming modes
 (add-hook 'prog-mode-hook 'display-line-numbers-mode)
 
+(pixel-scroll-precision-mode 1)
 ;; The `setq' special form is used for setting variables. Remember
 ;; that you can look up these variables with "C-h v variable-name".
 (setq uniquify-buffer-name-style 'forward
@@ -56,7 +57,8 @@
       load-prefer-newer t
       backup-by-copying t
       ;; Backups are placed into your Emacs directory, e.g. ~/.config/emacs/backups
-      backup-directory-alist `(("." . ,(concat user-emacs-directory "backups")))
+      backup-directory-alist
+      `(("." . ,(concat user-emacs-directory "backups")))
       ;; I'll add an extra note here since user customizations are important.
       ;; Emacs actually offers a UI-based customization menu, "M-x customize".
       ;; You can use this menu to change variable values across Emacs. By default,
@@ -66,7 +68,13 @@
       ;; separate file, custom.el, to keep your init.el clean.
       text-mode-ispell-word-completion nil
       read-extended-command-predicate #'command-completion-default-include-p
-      )
+      tab-always-indent 'complete
+      scroll-step 1
+      scroll-conservatively 10000
+      scroll-preserve-screen-position t
+      mouse-wheel-progressive-speed nil
+      scroll-margin 5)
+      
 
 (defvar bootstrap-version)
 (let ((bootstrap-file
@@ -88,7 +96,8 @@
 (setopt straight-use-package-by-default t)
 
 (use-package which-key
-  :straight nil
+  :straight
+  nil
   :init
   (which-key-mode t)
   :custom
@@ -96,23 +105,23 @@
   (which-key-idle-secondary-delay 0.1))
 
 (use-package no-littering
-  :demand t
+  :demand
+  t
   :init
   (require 'no-littering)
   (add-to-list 'recentf-exclude
                (recentf-expand-file-name no-littering-var-directory))
   (add-to-list 'recentf-exclude
                (recentf-expand-file-name no-littering-etc-directory))
-  (setq custom-file (expand-file-name "custom.el" user-emacs-directory)))
+  (setq custom-file
+        (expand-file-name "custom.el" user-emacs-directory)))
 
 (use-package compile-angel
-  :demand t
   :config
+  (setq compile-angel-verbose t)
   (push "/init.el" compile-angel-excluded-files)
   (push "/early-init.el" compile-angel-excluded-files)
-  (compile-angel-on-load-mode 1)
-  :custom
-  (compile-angel-verbose nil))
+  (compile-angel-on-load-mode 1))
 
 ;; A quick primer on the `use-package' function (refer to
 ;; "C-h f use-package" for the full details).
@@ -138,7 +147,8 @@
 
 ;; Powerline package
 (use-package doom-modeline
-  :init (doom-modeline-mode 1))
+  :init
+  (doom-modeline-mode 1))
 
 ;; Minibuffer completion is essential to your Emacs workflow and
 ;; Vertico is currently one of the best out there. There's a lot to
@@ -154,6 +164,45 @@
   :init
   (vertico-mode))
 
+;; (use-package slime
+;;   :init
+;;   (require 'slime-autoloads)
+;;   (setq inferior-lisp-program "sbcl")
+;;   (setq slime-contribs '(slime-fancy
+;;                          slime-coalton)))
+
+(use-package sly-overlay)
+(setq inferior-lisp-program "sbcl")
+(use-package sly
+  :config
+  (setq-default sly-symbol-completion-mode nil))
+
+(use-package cape
+  :init
+  (add-hook 'completion-at-point-functions #'cape-dabbrev)
+  (add-hook 'completion-at-point-functions #'cape-file)
+  (add-hook 'completion-at-point-functions #'cape-elisp-block))
+
+(use-package corfu
+  :custom
+  (corfu-cycle t)
+  (corfu-auto t)
+  (corfu-auto-delay 0.1)
+  (corfu-auto-prefix 1)
+  (corfu-quit-no-match t)
+  (corfu-preselect 'prompt)
+  (corfu-popupinfo-delay '(0.5 . 0.5))
+  :bind
+  (:map corfu-map
+        ("TAB" . corfu-next)
+        ([tab] . corfu-next)
+        ("S-TAB" . corfu-previous)
+        ([backtab] . corfu-previous))
+  :init
+  (global-corfu-mode)
+  (corfu-history-mode)
+  (corfu-popupinfo-mode))
+
 ;; use fzf-native. this thing seems to crash way too often, it's annoying
 (use-package fzf-native
   :straight
@@ -168,83 +217,42 @@
 
 ;; use fussy. It's kind of fussy hehe get it
 (use-package fussy
-  :straight (:url "https://github.com/jojojames/fussy" :rev :newest)
+  :straight
+  (:url "https://github.com/jojojames/fussy" :rev :newest)
   :config
+  (setq completion-styles '(basic))
   (setq fussy-compare-same-score-fn 'fussy-histlen->strlen<)
   (fussy-setup-fzf)
-  ;;(fussy-company-setup))
   (fussy-eglot-setup))
 
 ;; Improve the accessibility of Emacs documentation by placing
 ;; descriptions directly in your minibuffer. Give it a try:
 ;; "M-x find-file".
 (use-package marginalia
-  :after vertico
+  :after
+  vertico
   :init
   (marginalia-mode))
 
-;; Adds intellisense-style code completion at point that works great
-;; with LSP via Eglot. You'll likely want to configure this one to
-;; match your editing preferences, there's no one-size-fits-all
-;; solution.
-(use-package corfu
-  :after fussy
-  :init
-  (add-hook 'corfu-mode-hook
-        (lambda ()
-          (setq-local fussy-max-candidate-limit 5000
-                      fussy-default-regex-fn 'fussy-pattern-first-letter
-                      fussy-prefer-prefix nil)))
-  (global-corfu-mode)
-  :custom
-  (corfu-auto t)
-  (corfu-auto-delay 0)
-  (corfu-auto-prefix 1)
-  (corfu-popupinfo-delay '(0.5 . 0.5))
-  :config
-  (corfu-popupinfo-mode 1))
-
-;; add cape, recommended to use with corfu
-(use-package cape
-  :init
-  (add-hook 'completion-at-point-functions #'cape-dabbrev)
-  (add-hook 'completion-at-point-functions #'cape-file)
-  (add-hook 'completion-at-point-functions #'cape-elisp-block))
-
-;; add company for completion, might work better than corfu (hopefully)
-;; (use-package company
-;;   :init
-;;   (add-hook 'after-init-hook 'global-company-mode)
-;;   :custom
-;;   (company-minimum-prefix-length 1)
-;;   (company-idle-delay 0)
-;;   (company-inhibit-inside-symbols t)
-;;   (company-tooltip-align-annotations t))
-
-;; (use-package company-quickhelp
-;;   :init
-;;   (company-quickhelp-mode)
-;;   :custom
-;;   (company-quickhelp-delay 0.5))
-
-  ;; Adds LSP support. Note that you must have the respective LSP
-  ;; server installed on your machine to use it with Eglot. e.g.
-  ;; rust-analyzer to use Eglot with `rust-mode'.
+;; Adds LSP support. Note that you must have the respective LSP
+;; server installed on your machine to use it with Eglot. e.g.
+;; rust-analyzer to use Eglot with `rust-mode'.
 (use-package eglot
-    :ensure nil
-    :bind (("s-<mouse-1>" . eglot-find-implementation)
-           ("C-c ." . eglot-code-action-quickfix))
-    ;; Add your programming modes here to automatically start Eglot,
-    ;; assuming you have the respective LSP server installed.
-    :hook ((go-mode . eglot-ensure)
-           (web-mode . eglot-ensure)
-           (lua-ts-mode . eglot-ensure))
-    :config
-    ;; You can configure additional LSP servers by modifying
-    ;; `eglot-server-programs'. The following tells eglot to use TypeScript
-    ;; language server when working in `web-mode'.
-    (add-to-list 'eglot-server-programs
-                 '(web-mode . ("typescript-language-server" "--stdio"))))
+  :ensure
+  nil
+  :bind (("s-<mouse-1>" . eglot-find-implementation)
+         ("C-c ." . eglot-code-action-quickfix))
+  ;; Add your programming modes here to automatically start Eglot,
+  ;; assuming you have the respective LSP server installed.
+  :hook ((go-mode . eglot-ensure)
+         (web-mode . eglot-ensure)
+         (lua-ts-mode . eglot-ensure))
+  :config
+  ;; You can configure additional LSP servers by modifying
+  ;; `eglot-server-programs'. The following tells eglot to use TypeScript
+  ;; language server when working in `web-mode'.
+  (add-to-list 'eglot-server-programs
+               '(web-mode . ("typescript-language-server" "--stdio"))))
 
 (use-package mason
   :config
@@ -262,12 +270,13 @@
 ;; search and understand. This configuration uses the keybindings
 ;; recommended by the package author.
 (use-package helpful
-  :bind (("C-h f" . #'helpful-callable)
-         ("C-h v" . #'helpful-variable)
-         ("C-h k" . #'helpful-key)
-         ("C-c C-d" . #'helpful-at-point)
-         ("C-h F" . #'helpful-function)
-         ("C-h C" . #'helpful-command)))
+  :bind
+  (("C-h f" . #'helpful-callable)
+   ("C-h v" . #'helpful-variable)
+   ("C-h k" . #'helpful-key)
+   ("C-c C-d" . #'helpful-at-point)
+   ("C-h F" . #'helpful-function)
+   ("C-h C" . #'helpful-command)))
 
 ;; Adds vim emulation. Activate `evil-mode' to swap your default Emacs
 ;; keybindings with the modal editor of great infamy. There's a ton of
@@ -281,7 +290,8 @@
   (evil-mode 1))
 
 (use-package evil-collection
-  :after evil
+  :after
+  evil
   :config
   (evil-collection-init))
 
@@ -292,9 +302,20 @@
   (add-hook 'after-init-hook #'global-flycheck-mode))
 
 (use-package flycheck-inline
-  :after flycheck
+  :after
+  flycheck
   :init
   (global-flycheck-inline-mode 1))
+
+(use-package parinfer-rust-mode
+  :hook
+  ((lisp-mode . parinfer-rust-mode)
+   (emacs-lisp-mode . parinfer-rust-mode))
+  :custom
+  (parinfer-rust-auto-download t)
+  (parinfer-rust-disable-troublesome-modes t)
+  :config
+  (flycheck-add-next-checker 'emacs-lisp 'parinfer-rust t))
 
 (use-package projectile
   :init
@@ -305,59 +326,61 @@
 ;; Add consult and keybinds
 (use-package consult
   ;; Replace bindings. Lazily loaded by `use-package'.
-  :bind (;; C-c bindings in `mode-specific-map'
-         ("C-c M-x" . consult-mode-command)
-         ("C-c h" . consult-history)
-         ("C-c k" . consult-kmacro)
-         ("C-c m" . consult-man)
-         ("C-c i" . consult-info)
-         ([remap Info-search] . consult-info)
-         ;; C-x bindings in `ctl-x-map'
-         ("C-x M-:" . consult-complex-command) ;; orig. repeat-complex-command
-         ("C-x b" . consult-buffer) ;; orig. switch-to-buffer
-         ("C-x 4 b" . consult-buffer-other-window) ;; orig. switch-to-buffer-other-window
-         ("C-x 5 b" . consult-buffer-other-frame) ;; orig. switch-to-buffer-other-frame
-         ("C-x t b" . consult-buffer-other-tab) ;; orig. switch-to-buffer-other-tab
-         ("C-x r b" . consult-bookmark)         ;; orig. bookmark-jump
-         ("C-x p b" . consult-project-buffer) ;; orig. project-switch-to-buffer
-         ;; Custom M-# bindings for fast register access
-         ("M-#" . consult-register-load)
-         ("M-'" . consult-register-store) ;; orig. abbrev-prefix-mark (unrelated)
-         ("C-M-#" . consult-register)
-         ;; Other custom bindings
-         ("M-y" . consult-yank-pop) ;; orig. yank-pop
-         ;; M-g bindings in `goto-map'
-         ("M-g e" . consult-compile-error)
-         ("M-g r" . consult-grep-match)
-         ("M-g f" . consult-flycheck) ;; Alternative: consult-flycheck
-         ("M-g g" . consult-goto-line)   ;; orig. goto-line
-         ("M-g M-g" . consult-goto-line) ;; orig. goto-line
-         ("M-g o" . consult-outline) ;; Alternative: consult-org-heading
-         ("M-g m" . consult-mark)
-         ("M-g k" . consult-global-mark)
-         ("M-g i" . consult-imenu)
-         ("M-g I" . consult-imenu-multi)
-         ;; M-s bindings in `search-map'
-         ("M-s d" . consult-find) ;; Alternative: consult-fd
-         ("M-s c" . consult-locate)
-         ("M-s g" . consult-grep)
-         ("M-s G" . consult-git-grep)
-         ("M-s r" . consult-ripgrep)
-         ("M-s l" . consult-line)
-         ("M-s L" . consult-line-multi)
-         ("M-s k" . consult-keep-lines)
-         ("M-s u" . consult-focus-lines)
-         ;; Isearch integration
-         ("M-s e" . consult-isearch-history)
-         :map isearch-mode-map
-         ("M-e" . consult-isearch-history) ;; orig. isearch-edit-string
-         ("M-s e" . consult-isearch-history) ;; orig. isearch-edit-string
-         ("M-s l" . consult-line) ;; needed by consult-line to detect isearch
-         ("M-s L" . consult-line-multi) ;; needed by consult-line to detect isearch
-         ;; Minibuffer history
-         :map minibuffer-local-map
-         ("M-s" . consult-history) ;; orig. next-matching-history-element
-         ("M-r" . consult-history)) ;; orig. previous-matching-history-element
+  :bind
+  (;; C-c bindings in `mode-specific-map'
+   ("C-c M-x" . consult-mode-command)
+   ("C-c h" . consult-history)
+   ("C-c k" . consult-kmacro)
+   ("C-c m" . consult-man)
+   ("C-c i" . consult-info)
+   ([remap Info-search] . consult-info)
+   ;; C-x bindings in `ctl-x-map'
+   ("C-x M-:" . consult-complex-command) ;; orig. repeat-complex-command
+   ("C-x b" . consult-buffer) ;; orig. switch-to-buffer
+   ("C-x 4 b" . consult-buffer-other-window) ;; orig. switch-to-buffer-other-window
+   ("C-x 5 b" . consult-buffer-other-frame) ;; orig. switch-to-buffer-other-frame
+   ("C-x t b" . consult-buffer-other-tab) ;; orig. switch-to-buffer-other-tab
+   ("C-x r b" . consult-bookmark)         ;; orig. bookmark-jump
+   ("C-x p b" . consult-project-buffer) ;; orig. project-switch-to-buffer
+   ;; Custom M-# bindings for fast register access
+   ("M-#" . consult-register-load)
+   ("M-'" . consult-register-store) ;; orig. abbrev-prefix-mark (unrelated)
+   ("C-M-#" . consult-register)
+   ;; Other custom bindings
+   ("M-y" . consult-yank-pop) ;; orig. yank-pop
+   ;; M-g bindings in `goto-map'
+   ("M-g e" . consult-compile-error)
+   ("M-g r" . consult-grep-match)
+   ("M-g f" . consult-flycheck) ;; Alternative: consult-flycheck
+   ("M-g g" . consult-goto-line)   ;; orig. goto-line
+   ("M-g M-g" . consult-goto-line) ;; orig. goto-line
+   ("M-g o" . consult-outline) ;; Alternative: consult-org-heading
+   ("M-g m" . consult-mark)
+   ("M-g k" . consult-global-mark)
+   ("M-g i" . consult-imenu)
+   ("M-g I" . consult-imenu-multi)
+   ;; M-s bindings in `search-map'
+   ("M-s d" . consult-find) ;; Alternative: consult-fd
+   ("M-s c" . consult-locate)
+   ("M-s g" . consult-grep)
+   ("M-s G" . consult-git-grep)
+   ("M-s r" . consult-ripgrep)
+   ("M-s l" . consult-line)
+   ("M-s L" . consult-line-multi)
+   ("M-s k" . consult-keep-lines)
+   ("M-s u" . consult-focus-lines)
+   ;; Isearch integration
+   ("M-s e" . consult-isearch-history)
+   :map isearch-mode-map
+   ("M-e" . consult-isearch-history) ;; orig. isearch-edit-string
+   ("M-s e" . consult-isearch-history) ;; orig. isearch-edit-string
+   ("M-s l" . consult-line) ;; needed by consult-line to detect isearch
+   ("M-s L" . consult-line-multi) ;; needed by consult-line to detect isearch
+   ;; Minibuffer history
+   :map minibuffer-local-map
+   ("M-s" . consult-history) ;; orig. next-matching-history-element
+   ("M-r" . consult-history))
+  ;; orig. previous-matching-history-element
   ;; The :init configuration is always executed (Not lazy)
   :init
   ;; Tweak the register preview for `consult-register-load',
@@ -392,50 +415,23 @@
 
   ;; Optionally configure the narrowing key.
   ;; Both < and C-+ work reasonably well.
-  (setq consult-narrow-key "<") ;; "C-+"
+  (setq consult-narrow-key "<"))
+;; "C-+"
 
   ;; Optionally make narrowing help available in the minibuffer.
   ;; You may want to use `embark-prefix-help-command' or which-key instead.
   ;; (keymap-set consult-narrow-map (concat consult-narrow-key " ?") #'consult-narrow-help)
-  )
+  
 
 ;; An extremely feature-rich git client. Activate it with "C-c g".
 (use-package magit
-  :bind (("C-c g" . magit-status)))
+  :bind
+  (("C-c g" . magit-status)))
 
-;; As you've probably noticed, Lisp has a lot of parentheses.
-;; Maintaining the syntactical correctness of these parentheses
-;; can be a pain when you're first getting started with Lisp,
-;; especially when you're fighting the urge to break up groups
-;; of closing parens into separate lines. Luckily we have
-;; Paredit, a package that maintains the structure of your
-;; parentheses for you. At first, Paredit might feel a little
-;; odd; you'll probably need to look at a tutorial (linked
-;; below) or read the docs before you can use it effectively.
-;; But once you pass that initial barrier you'll write Lisp
-;; code like it's second nature.
-;; http://danmidwood.com/content/2014/11/21/animated-paredit.html
-;; https://stackoverflow.com/a/5243421/3606440
-
-(use-package smartparens
-  :config
-  (require 'smartparens-config)
-  (smartparens-global-mode)
-  (show-smartparens-global-mode))
-
-(use-package slime
-  :init
-  (require 'slime-autoloads)
-  (setq inferior-lisp-program "sbcl")
-  (setq slime-contribs '(slime-fancy
-                         slime-coalton
-                         slime-references
-                         slime-sbcl-exts
-                         slime-sprof
-                         )))
 
 (use-package go-mode
-  :bind (:map go-mode-map)
+  :bind
+  (:map go-mode-map)
   ("C-c C-f" . 'gofmt)
   :hook (before-save . gofmt-before-save))
 
@@ -444,18 +440,20 @@
   ;; `visual-line-mode' turns on word wrap and helps editing commands
   ;; work with paragraphs of text. `flyspell-mode' turns on an
   ;; automatic spell checker.
-  :hook ((markdown-mode . visual-line-mode)
-         (markdown-mode . flyspell-mode))
+  :hook
+  ((markdown-mode . visual-line-mode)
+   (markdown-mode . flyspell-mode))
   :init
   (setq markdown-command "multimarkdown"))
 
 ;; TypeScript, JS, and JSX/TSX support.
 (use-package web-mode
-  :mode (("\\.ts\\'" . web-mode)
-         ("\\.js\\'" . web-mode)
-         ("\\.mjs\\'" . web-mode)
-         ("\\.tsx\\'" . web-mode)
-         ("\\.jsx\\'" . web-mode))
+  :mode
+  (("\\.ts\\'" . web-mode)
+   ("\\.js\\'" . web-mode)
+   ("\\.mjs\\'" . web-mode)
+   ("\\.tsx\\'" . web-mode)
+   ("\\.jsx\\'" . web-mode))
   :custom
   (web-mode-content-types-alist '(("jsx" . "\\.js[x]?\\'")))
   (web-mode-code-indent-offset 2)
@@ -477,14 +475,17 @@
 (my/add-auto-mode ".lua" 'lua-ts-mode)
 
 (use-package bind-map
-  :demand t)
+  :demand
+  t)
 (bind-map my/leader-map
-  :keys ("M-m")
+  :keys
+  ("M-m")
   :evil-keys ("SPC")
   :evil-states (normal motion visual))
 
 (bind-map-set-keys my/leader-map
-  "SPC" 'execute-extended-command
+  "SPC"
+  'execute-extended-command
   ;; files
   "f f" 'find-file
   ;; search
@@ -502,13 +503,11 @@
   ;; help
   "h f" 'helpful-callable
   "h v" 'helpful-variable
-  ;; smartparens
-  "p s" 'sp-forward-slurp-sexp
-  "p S" 'sp-backward-slurp-sexp
-  "p b" 'sp-forward-barf-sexp
-  "p B" 'sp-backward-barf-sexp
-  "p n" 'sp-next-sexp
-  "p b" 'sp-previous-sexp
+  ;; parens
+  "p n" 'forward-sexp
+  "p b" 'backward-sexp
+  "p i" 'indent-sexp
+  "p r" 'raise-sexp
   ;; windows
   "w h" 'evil-window-left
   "w j" 'evil-window-down
@@ -531,15 +530,33 @@
   "d p r" 'projectile-run-project
   "d p c" 'projectile-configure-project
   ;; magit?
-  "g g" 'magit
-  )
+  "g g" 'magit)
+  
+
+(bind-map my/cl-leader-map
+  :evil-keys
+  ("SPC m")
+  :evil-states (normal motion visual)
+  :major-modes (lisp-mode)
+  :bindings ("e e" 'sly-eval-last-expression
+             "e E" 'sly-pprint-eval-last-expression
+             "e r" 'sly-eval-region
+             "e R" 'sly-pprint-eval-region
+             "e b" 'sly-eval-buffer
+             "c c" 'sly-compile-defun
+             "c f" 'sly-compile-file
+             "e d" 'sly-overlay-eval-defun
+             "s s" 'sly
+             "s c" 'sly-connect))
+             
+
 (which-key-add-key-based-replacements
   "SPC SPC" "command"
   "SPC h" "helpful"
   "SPC f" "files"
   "SPC b" "buffer"
   "SPC T" "toggles"
-  "SPC p" "smartparens"
+  "SPC p" "parens"
   "SPC m" "local"
   "SPC w" "windows"
   "SPC d" "projectile"
@@ -550,6 +567,8 @@
 (evil-define-key '(normal visual) 'global
   (kbd "C-s") 'consult-line
   (kbd "K") 'helpful-at-point)
+
+(define-key minibuffer-local-filename-completion-map (kbd "RET") 'backward-kill-word)
 
 (provide 'init)
 ;;; init.el ends here
