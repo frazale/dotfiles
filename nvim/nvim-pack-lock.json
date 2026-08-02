@@ -27,6 +27,10 @@
       "src": "https://github.com/saghen/blink.pairs",
       "version": ">=0.0.0"
     },
+    "code-runner.nvim": {
+      "rev": "d1910bac0d4ed7db6b3ccad2c9ade022b6bb7220",
+      "src": "https://github.com/wsdjeg/code-runner.nvim"
+    },
     "conform.nvim": {
       "rev": "619363c30309d29ffa631e67c8183f2a72caa373",
       "src": "https://github.com/stevearc/conform.nvim"
@@ -84,10 +88,9 @@
       "rev": "b73018b75affd13fa38e2fc94ef753b465f770d7",
       "src": "https://github.com/stevearc/oil.nvim"
     },
-    "opencode.nvim": {
-      "rev": "41622312d5d8fb074699c1d5d96f089286191376",
-      "src": "https://github.com/nickjvandyke/opencode.nvim",
-      "version": ">=0.0.0"
+    "one_monokai.nvim": {
+      "rev": "26e95c14dd3dcd4bf5752d19a54a28817f7d8ea7",
+      "src": "https://github.com/cpea2506/one_monokai.nvim"
     },
     "plenary.nvim": {
       "rev": "74b06c6c75e4eeb3108ec01852001636d85a932b",
@@ -109,6 +112,10 @@
       "rev": "b023c5280b16fe2366f5e779d8d2756b3e5ee9c3",
       "src": "https://github.com/sainnhe/sonokai"
     },
+    "tasks.nvim": {
+      "rev": "81ea36d8a9c930a3afe7fb43105f6d7c46d36ef1",
+      "src": "https://github.com/wsdjeg/tasks.nvim"
+    },
     "telescope-fzf-native.nvim": {
       "rev": "b25b749b9db64d375d782094e2b9dce53ad53a40",
       "src": "https://github.com/nvim-telescope/telescope-fzf-native.nvim"
@@ -120,6 +127,10 @@
     "tiny-inline-diagnostic.nvim": {
       "rev": "6264451f14119d63a52580e5198d6baf8518b0b2",
       "src": "https://github.com/rachartier/tiny-inline-diagnostic.nvim"
+    },
+    "toml.nvim": {
+      "rev": "21515edda8c16128ec23cdfe2a597c6fbce6cc81",
+      "src": "https://github.com/wsdjeg/toml.nvim"
     },
     "tree-sitter-manager.nvim": {
       "rev": "9dc4ffc4fb010e7abb976a92360c2c5a7d324c15",

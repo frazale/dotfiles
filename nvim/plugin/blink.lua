@@ -34,9 +34,7 @@ blink.setup({
   --
   -- See :h blink-cmp-config-keymap for defining your own keymap
   keymap = {
-    preset = "enter",
-    ["<Tab>"] = { "select_next", "fallback" },
-    ["<S-Tab>"] = { "select_prev", "fallback" },
+    preset = "super-tab",
   },
 
   cmdline = {
@@ -50,8 +48,8 @@ blink.setup({
       },
       list = {
         selection = {
-          preselect = false,
-          auto_insert = true,
+          preselect = true,
+          auto_insert = false,
         }
       }
     }
@@ -70,8 +68,8 @@ blink.setup({
     ghost_text = { enabled = false },
     list = {
       selection = {
-        auto_insert = true,
-        preselect = false,
+        auto_insert = false,
+        preselect = true,
       },
     },
   },
