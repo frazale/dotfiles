@@ -15,10 +15,6 @@ vim.pack.add({
   { src = "https://github.com/saghen/blink.pairs",          version = vim.version.range("*") },
   { src = "https://github.com/saghen/blink.compat",         version = vim.version.range("*") },
   { src = "https://github.com/saghen/blink.cmp",            version = vim.version.range("*") },
-  {
-    src = "https://github.com/nickjvandyke/opencode.nvim",
-    version = vim.version.range("*"),
-  },
 })
 
 require("blink.compat").setup({})
