@@ -1,0 +1,155 @@
+// Zed settings
+//
+// For information on how to configure Zed, see the Zed
+// documentation: https://zed.dev/docs/configuring-zed
+//
+// To see all of Zed's default settings without changing your
+// custom settings, run `zed: open default settings` from the
+// command palette (cmd-shift-p / ctrl-shift-p)
+{
+  "terminal": {
+    "working_directory": "current_file_directory",
+  },
+  "semantic_tokens": "combined",
+  "show_completion_documentation": true,
+  "lsp_document_colors": "inlay",
+  "hover_popover_enabled": false,
+  "preferred_line_length": 100,
+  "soft_wrap": "bounded",
+  "show_wrap_guides": true,
+  "diff_view_style": "unified",
+  "allow_rewrap": "anywhere",
+  "tabs": {
+    "show_diagnostics": "errors",
+  },
+  "diagnostics": {
+    "inline": {
+      "enabled": false,
+    },
+  },
+  "colorize_brackets": false,
+  "inlay_hints": {
+    "show_other_hints": true,
+    "show_parameter_hints": false,
+    "show_type_hints": true,
+    "show_value_hints": true,
+    "enabled": true,
+  },
+  "completions": {
+    "words": "fallback",
+    "lsp_insert_mode": "replace",
+  },
+  "snippet_sort_order": "top",
+  "show_signature_help_after_edits": false,
+  "format_on_save": "on",
+  "proxy": "",
+  "project_panel": {
+    "hide_gitignore": false,
+    "dock": "left",
+  },
+  "outline_panel": {
+    "dock": "left",
+  },
+  "collaboration_panel": {
+    "dock": "left",
+  },
+  "git_panel": {
+    "dock": "left",
+  },
+  "languages": {
+    "Lua": {
+      "inlay_hints": {
+        "enabled": true,
+      },
+    },
+  },
+  "icon_theme": {
+    "mode": "dark",
+    "light": "Zed (Default)",
+    "dark": "Zed (Default)",
+  },
+  "cli_default_open_behavior": "existing_window",
+  "search": {
+    "case_sensitive": false,
+    "whole_word": false,
+  },
+  "file_finder": {
+    "file_icons": false,
+  },
+  "default_open_behavior": "existing_window",
+  "auto_signature_help": false,
+  "autosave": "on_focus_change",
+  "code_lens": "menu",
+  "when_closing_with_no_tabs": "keep_window_open",
+  "use_system_path_prompts": false,
+  "use_system_prompts": false,
+  "use_system_window_tabs": false,
+  "multi_cursor_modifier": "cmd_or_ctrl",
+  "use_smartcase_search": true,
+  "prettier": {
+    "parser": "",
+  },
+  "preview_tabs": {
+    "enable_preview_from_file_finder": true,
+  },
+  "vim_mode": true,
+  "which_key": {
+    "delay_ms": 10,
+    "enabled": true,
+  },
+  "agent": {
+    "use_modifier_to_send": true,
+    "profiles": {},
+    "thinking_display": "always_expanded",
+    "default_profile": "ask",
+    "favorite_models": [
+      {
+        "provider": "openrouter",
+        "model": "openrouter/free",
+        "enable_thinking": true,
+      },
+    ],
+    "default_model": {
+      "provider": "openrouter",
+      "model": "openrouter/free",
+      "enable_thinking": true,
+    },
+    "tool_permissions": {
+      "default": "confirm",
+      "tools": {
+        "search_web": {
+          "default": "allow",
+        },
+        "skill": {
+          "default": "allow",
+        },
+        "write_file": {
+          "default": "confirm",
+        },
+      },
+    },
+    "dock": "right",
+  },
+  "show_edit_predictions": false,
+  "ui_font_size": 16,
+  "buffer_font_size": 15,
+  "theme": {
+    "mode": "dark",
+    "light": "Flexoki Light",
+    "dark": "One Dark Pro",
+  },
+  "agent_servers": {
+    "pi-acp": {
+      "type": "registry",
+    },
+    "opencode": {
+      "favorite_config_option_values": {
+        "model": ["openrouter/openrouter/free", "opencode/deepseek-v4-flash-free"],
+      },
+      "default_config_options": {
+        "model": "opencode/deepseek-v4-flash-free",
+      },
+      "type": "registry",
+    },
+  },
+}

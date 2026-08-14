@@ -65,7 +65,7 @@ blink.setup({
   completion = {
     documentation = { auto_show = true },
     accept = { auto_brackets = { enabled = true } },
-    ghost_text = { enabled = false },
+    ghost_text = { enabled = true },
     list = {
       selection = {
         auto_insert = false,
