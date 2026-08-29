@@ -1,0 +1,4 @@
+[[language]]
+name = "nix"
+language-server = { command = "nixd" }
+auto-format = true
