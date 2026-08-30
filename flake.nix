@@ -6,8 +6,8 @@
   # Flake inputs
   inputs = {
     flake-schemas.url = "https://flakehub.com/f/DeterminateSystems/flake-schemas/*";
-    nixpkgs.url = "https://flakehub.com/f/NixOS/nixpkgs/0.1.*";
-    home-manager.url = "https://flakehub.com/f/nix-community/home-manager/*";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
   };
 
@@ -20,24 +20,28 @@
       # Schemas tell Nix about the structure of your flake's outputs
       schemas = flake-schemas.schemas;
 
-      homeConfigurations."frazale" = home-manager.lib.homeManagerConfiguration {
+      homeConfigurations."frazale" = home-manager.lib.homeManagerConfiguration{
         inherit pkgs;
-        modules = [
-          {
-            home.packages = with pkgs; [
-              nixpkgs-fmt
-              nixd
-              helix
-              odin
-              ols
-            ];
+	      modules = [
+	        ({config, pkgs, ...}: {
+	          home.stateVersion = "24.11";
+      	    home.username = "src";
+      	    home.homeDirectory = "/home/src";
 
-            xdg.configFile = {
-              "helix/config.toml".source = ./helix/config.toml;
-              "helix/languages.toml".source = ./helix/languages.toml;
-            };
-          }
-        ];
+      	    home.packages = with pkgs; [
+      	      nixpkgs-fmt
+      	      nixd
+      	      helix
+      	      odin
+      	      ols
+      	    ];
+
+      	    home.file = {
+      	      ".config/helix/config.toml".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/helix/config.toml";
+      	      ".config/helix/languages.toml".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/helix/languages.toml";
+      	    };
+      	  })
+      	];
       };
     };
 }
