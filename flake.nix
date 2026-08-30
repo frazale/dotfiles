@@ -23,24 +23,8 @@
       homeConfigurations."frazale" = home-manager.lib.homeManagerConfiguration{
         inherit pkgs;
 	      modules = [
-	        ({config, pkgs, ...}: {
-	          home.stateVersion = "24.11";
-      	    home.username = "src";
-      	    home.homeDirectory = "/home/src";
-
-      	    home.packages = with pkgs; [
-      	      nixpkgs-fmt
-      	      nixd
-      	      helix
-      	      odin
-      	      ols
-      	    ];
-
-      	    home.file = {
-      	      ".config/helix/config.toml".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/helix/config.toml";
-      	      ".config/helix/languages.toml".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/helix/languages.toml";
-      	    };
-      	  })
+	        ./configs.nix
+	        ./languages.nix
       	];
       };
     };
