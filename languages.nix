@@ -1,8 +1,10 @@
-{ config, pkgs, ... }:
+{ pkgs, ... }:
 {
   home.packages = with pkgs; [
     odin
     ols
     nixd
-  ];
+    tombi
+    just-lsp
+    ];
 }

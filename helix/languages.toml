@@ -1,3 +1,11 @@
-[[language]]
-name = "nix"
-auto-format = true
+# example
+# [[language]]
+# name = "rust"
+
+# [language.auto-pairs]
+# '(' = ')'
+# '{' = '}'
+# '[' = ']'
+# '"' = '"'
+# '`' = '`'
+# '<' = '>'

@@ -20,7 +20,7 @@
       # Schemas tell Nix about the structure of your flake's outputs
       schemas = flake-schemas.schemas;
 
-      homeConfigurations."frazale" = home-manager.lib.homeManagerConfiguration{
+      homeConfigurations.default = home-manager.lib.homeManagerConfiguration{
         inherit pkgs;
 	      modules = [
 	        ./configs.nix

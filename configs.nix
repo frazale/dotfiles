@@ -5,6 +5,8 @@
   home.homeDirectory = "/home/src";
   home.packages = with pkgs; [
     helix
+    just
+    direnv
   ];
   
   home.file = {
