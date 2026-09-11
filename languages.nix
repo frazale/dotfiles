@@ -6,5 +6,7 @@
     nixd
     tombi
     just-lsp
+    lua-language-server
+    stylua
     ];
 }

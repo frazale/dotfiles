@@ -1,0 +1,22 @@
+[colors-dark]
+foreground=cecdc3
+background=100f0f
+regular0=343331
+regular1=d14d41
+regular2=879a39
+regular3=d0a215
+regular4=4385be
+regular5=8b7ec8
+regular6=3aa99f
+regular7=e6e4d9
+bright0=575653
+bright1=f89a8a
+bright2=bec97e
+bright3=eccb60
+bright4=92bfdb
+bright5=c4b9e0
+bright6=87d3c3
+bright7=fffcf0
+selection-foreground=ddf1e4
+selection-background=164f4a
+cursor=100f0f cecdc3

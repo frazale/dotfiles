@@ -9,23 +9,32 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
+    neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
   };
 
   # Flake outputs that other flakes can use
-  outputs = { self, flake-schemas, nixpkgs, home-manager }:
+  outputs = { self, ... }@inputs:
     let
       system = "x86_64-linux";
-      pkgs = import nixpkgs { inherit system; };
+      pkgs = import inputs.nixpkgs { inherit system; };
+      overlays = [
+        inputs.neovim-nightly-overlay.overlays.default
+      ];
     in {
       # Schemas tell Nix about the structure of your flake's outputs
-      schemas = flake-schemas.schemas;
+      schemas = inputs.flake-schemas.schemas;
 
-      homeConfigurations.default = home-manager.lib.homeManagerConfiguration{
-        inherit pkgs;
-	      modules = [
-	        ./configs.nix
-	        ./languages.nix
-      	];
+      homeConfigurations = {
+        arch-desktop = inputs.home-manager.lib.homeManagerConfiguration {
+          inherit pkgs;
+          modules = [
+            {
+              nixpkgs.overlays = overlays;
+            }
+            ./configs.nix
+            ./languages.nix
+          ];
+        };
       };
     };
 }
