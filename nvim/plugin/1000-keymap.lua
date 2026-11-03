@@ -61,3 +61,15 @@ for _, v in pairs(dap_keys) do
     local lhs = '<leader>d' .. v[1]
     set({ 'n', 'v' }, lhs, v[2], { desc = v[3] })
 end
+
+vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<cr>')
+vim.keymap.set(
+    'n',
+    '<leader>H',
+    function()
+        vim.lsp.inlay_hint.enable(
+            not vim.lsp.inlay_hint.is_enabled({ bufnr = 0 })
+        )
+    end,
+    { desc = 'Toggle inlay hint' }
+)

@@ -1,5 +1,14 @@
 vim.pack.add({
     { src = GH('mfussenegger/nvim-dap') },
+    { src = GH('nvim-neotest/nvim-nio') },
+    { src = GH('rcarriga/nvim-dap-ui') },
+})
+
+local dui = require('dapui')
+dui.setup()
+
+MapTable('n', '<leader>d', {
+    { 'u', function() dui.toggle() end, 'Toggle dap ui' },
 })
 
 local dap = require('dap')
@@ -18,3 +27,23 @@ dap.adapters.nlua = function(callback, config)
         port = config.port or 8086,
     })
 end
+
+dap.adapters.codelldb = {
+    type = 'executable',
+    command = 'codelldb',
+}
+
+dap.configurations.odin = {
+    {
+        name = 'Launch Odin Debug',
+        type = 'codelldb',
+        request = 'launch',
+        program = function()
+            return vim.fn.input(
+                'Path to executable: ',
+                vim.fn.getcwd() .. '/',
+                'file'
+            )
+        end,
+    },
+}

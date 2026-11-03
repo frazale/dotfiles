@@ -8,7 +8,6 @@ local fff = require('fff')
 fff.setup({})
 
 MapTable('n', '<leader>s', {
-    { 'f', function() fff.find_files() end, 'Find files' },
     {
         's',
         function() fff.live_grep({ grep = { modes = { 'fuzzy', 'plain' } } }) end,
@@ -20,3 +19,10 @@ MapTable('n', '<leader>s', {
         'Search current word / selection',
     },
 })
+
+vim.keymap.set(
+    'n',
+    '<leader><leader>',
+    function() fff.find_files() end,
+    { desc = 'Find Files' }
+)

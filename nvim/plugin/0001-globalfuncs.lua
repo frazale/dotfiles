@@ -4,10 +4,11 @@ GH = function(repo) return 'https://github.com/' .. repo end
 ---@field [1] string Last key of Lhs, appended to lhs_partial
 ---@field [2] string|function command or function to be assigned to lhs
 ---@field [3] string description
+local K
 
 ---@param modes string|string[]
 ---@param lhs_partial string keys that will be prepended to lhs of each mapping
----@param mappings KeymapTable[]
+---@param mappings {lhs:string, rhs:string|function, description:string}[]
 MapTable = function(modes, lhs_partial, mappings)
     local lhs, rhs, desc = 1, 2, 3
     for _, v in pairs(mappings) do
